@@ -12,10 +12,10 @@ import { Switch } from './ui/switch';
 import { Checkbox } from './ui/checkbox';
 import { Separator } from './ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { 
-  Upload, 
-  Play, 
-  Pause, 
+import {
+  Upload,
+  Play,
+  Pause,
   Square,
   CheckCircle,
   XCircle,
@@ -32,6 +32,7 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react';
+import { simulateNetworkDelay, mockUploadSuccess } from '../mocks/demoUtils';
 
 interface GameUploadItem {
   id: string;
@@ -256,10 +257,10 @@ export function BulkUploadManager() {
   // Simulate upload to platform
   const uploadToPlatform = async (item: GameUploadItem, platform: string): Promise<boolean> => {
     // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
-    
+    await simulateNetworkDelay();
+
     // Simulate success/failure (90% success rate)
-    const success = Math.random() > 0.1;
+    const success = mockUploadSuccess();
     
     if (success) {
       updateItem(item.id, {

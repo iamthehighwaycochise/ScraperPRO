@@ -1,5 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { ProductDetails, RegionalPriceData, RegionalPrice, XboxMarket, MarketAnalysis } from '../types/scraper';
+import { mockEnabled } from '../mocks/random';
+import { generateMockRegionalPrice } from '../mocks/pricing';
 
 // Lista completa de mercados de Xbox (200+ regiones)
 export const XBOX_MARKETS: XboxMarket[] = [
@@ -247,26 +249,8 @@ export const useXboxAPI = () => {
       const url = buildXboxAPIUrl(productId, market);
       
       // En un navegador, usar datos mock para evitar CORS
-      if (typeof window !== 'undefined' && !window.electronAPI) {
-        // Generar datos mock realistas
-        const basePrice = Math.random() * 60 + 10; // Precio base entre $10-70
-        const discountPercent = Math.random() > 0.7 ? Math.random() * 80 : 0; // 30% chance de descuento
-        const originalPrice = basePrice / (1 - discountPercent / 100);
-        
-        return {
-          region: market.region,
-          regionCode: market.code,
-          countryName: market.name,
-          currency: market.currency,
-          price: parseFloat(basePrice.toFixed(2)),
-          originalPrice: parseFloat(originalPrice.toFixed(2)),
-          discount: parseFloat(discountPercent.toFixed(1)),
-          priceUSD: convertToUSD(basePrice, market.currency),
-          isFree: Math.random() > 0.95, // 5% chance de ser gratis
-          isOnSale: discountPercent > 0,
-          dealUntil: discountPercent > 0 ? new Date(Date.now() + Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString() : undefined,
-          lastUpdated: new Date().toISOString()
-        };
+      if (mockEnabled && typeof window !== 'undefined' && !window.electronAPI) {
+        return generateMockRegionalPrice(market, convertToUSD);
       }
 
       // En Electron, hacer la llamada real a la API

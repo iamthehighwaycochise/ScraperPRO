@@ -169,6 +169,22 @@ Product Name,Full description,Short summary,9.99,https://delivery-url.com,https:
 3. Crea nuevo webhook
 4. Copia la URL
 
+### Modo Mock
+
+Para habilitar datos simulados y utilidades de demostración, activa el modo mock con la variable de entorno `VITE_USE_MOCKS`:
+
+```bash
+VITE_USE_MOCKS=true npm run dev
+```
+
+Para desactivar el modo mock simplemente ejecuta los scripts sin la variable:
+
+```bash
+npm run dev
+```
+
+Los módulos dentro de `mocks/` generan datos y comportamientos ficticios cuando este modo está activado.
+
 ## ⌨️ Atajos de Teclado (Electron)
 
 - `F5` - Iniciar scraping
