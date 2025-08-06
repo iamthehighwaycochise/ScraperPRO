@@ -26,6 +26,8 @@ import {
 import { useXboxAPI, XBOX_MARKETS } from '../hooks/useXboxAPI';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { ProductDetails } from '../types/scraper';
+import { randomFloat, randomBool, mockEnabled } from '../mocks/random';
+import { simulateNetworkDelay } from '../mocks/demoUtils';
 
 // Enhanced Xbox game data interface for the viewer
 interface XboxGameData {
@@ -130,15 +132,16 @@ export function XboxProductViewer() {
 
   // Mock function to fetch detailed game data
   const fetchGameData = useCallback(async (productId: string, region: string): Promise<XboxGameData | null> => {
+    if (!mockEnabled) return null;
     // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    await simulateNetworkDelay();
+
     // Generate mock data based on product ID
     const mockData: XboxGameData = {
       productId,
       title: productId === '9NGBNVMFXPT6' ? 'Halo Infinite' : `Xbox Game ${productId.slice(-4)}`,
       description: 'Master Chief returns in the most ambitious Halo game ever created. Explore the vast world of Zeta Halo and experience the most wide-open and adventure-filled Halo campaign yet.',
-      price: Math.round((Math.random() * 50 + 10) * 100) / 100,
+      price: Math.round(randomFloat(10, 60) * 100) / 100,
       currency: getCurrencyForRegion(region),
       region,
       locale: getLanguageForRegion(region),
@@ -146,8 +149,8 @@ export function XboxProductViewer() {
       publisher: 'Microsoft Studios',
       releaseDate: '2021-12-08',
       rating: 4.5,
-      discount: Math.random() > 0.7 ? Math.round(Math.random() * 50) : 0,
-      isOnSale: Math.random() > 0.7,
+      discount: randomBool(0.7) ? Math.round(randomFloat(0, 50)) : 0,
+      isOnSale: randomBool(0.7),
       categories: ['Games', 'Action & adventure', 'Shooter'],
       platforms: ['Xbox Series X|S', 'Xbox One', 'PC'],
       features: ['4K Ultra HD', 'HDR10', 'Spatial Audio', 'Xbox Live Gold', 'Smart Delivery'],
